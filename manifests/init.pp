@@ -151,6 +151,22 @@ class apache (
     path => '/bin:/sbin:/usr/bin:/usr/sbin',
   }
 
+  if $confd_enable_dir {
+	  exec { "mkdir ${confd_enable_dir}":
+	    creates => $confd_enable_dir,
+	    require => Package['httpd'],
+	  }
+    file { $confd_enable_dir:
+	    ensure  => directory,
+	    recurse => true,
+	    purge   => $purge_confd,
+	    notify  => Class['Apache::Service'],
+	    require => Package['httpd'],      
+    }
+    $purge_confd_avail = false
+  } else {
+    $purge_confd_avail = $purge_confd 
+  }
   exec { "mkdir ${confd_dir}":
     creates => $confd_dir,
     require => Package['httpd'],
@@ -158,7 +174,7 @@ class apache (
   file { $confd_dir:
     ensure  => directory,
     recurse => true,
-    purge   => $purge_confd,
+    purge   => $purge_confd_avail,
     notify  => Class['Apache::Service'],
     require => Package['httpd'],
   }
