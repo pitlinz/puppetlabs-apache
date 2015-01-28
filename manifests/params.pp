@@ -151,12 +151,14 @@ class apache::params inherits ::apache::version {
     $conf_dir            = $httpd_dir
     
     # changes by pitlinz
-    if $::operatingsystem == "Ubuntu" and $::lsbdistrelease == "14.04" {
+    if $::operatingsystem == "Ubuntu" and versioncmp($::operatingsystemrelease,"14.04") >= 0 {
       $confd_dir           = "${httpd_dir}/conf-available"
       $confd_enable_dir    = "${httpd_dir}/conf-enabled"
+      $mpm_module          = 'prefork'
     } else {
       $confd_dir           = "${httpd_dir}/conf.d"
       $confd_enable_dir    = false
+      $mpm_module          = 'worker'      
     }
        
     $mod_dir             = "${httpd_dir}/mods-available"
@@ -168,7 +170,6 @@ class apache::params inherits ::apache::version {
     $logroot             = '/var/log/apache2'
     $logroot_mode        = undef
     $lib_path            = '/usr/lib/apache2/modules'
-    $mpm_module          = 'worker'
     $dev_packages        = ['libaprutil1-dev', 'libapr1-dev', 'apache2-prefork-dev']
     $default_ssl_cert    = '/etc/ssl/certs/ssl-cert-snakeoil.pem'
     $default_ssl_key     = '/etc/ssl/private/ssl-cert-snakeoil.key'
