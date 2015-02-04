@@ -158,7 +158,7 @@ class apache::params inherits ::apache::version {
     } else {
       $confd_dir           = "${httpd_dir}/conf.d"
       $confd_enable_dir    = false
-      $mpm_module          = 'worker'      
+      $mpm_module          = 'prefork'      
     }
        
     $mod_dir             = "${httpd_dir}/mods-available"
