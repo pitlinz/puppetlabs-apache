@@ -30,8 +30,8 @@ class apache (
   $service_enable         = true,
   $service_manage         = true,
   $service_ensure         = 'running',
-  $purge_configs          = true,
-  $purge_vhost_dir        = undef,
+  $purge_configs          = false,
+  $purge_vhost_dir        = false,
   $purge_vdir             = false,
   $serveradmin            = 'root@localhost',
   $sendfile               = 'On',
@@ -161,11 +161,11 @@ class apache (
 	    recurse => true,
 	    purge   => $purge_confd,
 	    notify  => Class['Apache::Service'],
-	    require => Package['httpd'],      
+	    require => Package['httpd'],
     }
     $purge_confd_avail = false
   } else {
-    $purge_confd_avail = $purge_confd 
+    $purge_confd_avail = $purge_confd
   }
   exec { "mkdir ${confd_dir}":
     creates => $confd_dir,
